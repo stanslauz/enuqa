@@ -37,17 +37,12 @@ const sendNotification = require('../../services/NotificationService');;
 
         const otpGenerated = generateOTP();
 
-        try {
-          await sendNotification.sendMail({
+      
+          sendNotification.sendMail({
             to: req.body.email,
            OTP: otpGenerated,
           name: req.body.firstName});
   
-         } catch (error) {
-            console.log(error);
-            console.log("I am here");
-            return res.statusCode(500).send({message: "could not send email"});
-         }
 
         await UserService.createUser(
           req.body.username,
@@ -67,12 +62,25 @@ const sendNotification = require('../../services/NotificationService');;
   );
 
   
-    router.post('/resend', (req, res, next)=>{
+    router.post('/resend',async(req, res, next)=>{
       try {
         const otpGenerated = generateOTP();
+        const existingUser = await UserService.findByEmail(req.body.email);
+        if(existingUser)
+        {
+          UserService.updateToken(existingUser.email, otpGenerated);
+          
+            sendNotification.sendMail({
+              to: req.body.email,
+             OTP: otpGenerated,
+            name: existingUser.username});
+        
+         
+          
+          return res.status(200).send({messege: "otp send successfully"});
+        }
 
-
-
+        return res.status(400).send({message: "user does not exists"});
       } catch (error) {
         return next(err);
       }

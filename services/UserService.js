@@ -98,6 +98,15 @@ class UserService {
         user.password = password;
         return user.save();
       }
+
+      static async updateToken(email, token){
+        const user = UserModel.findOneAndUpdate({"email": email}, {$set: {"otp": token}});
+        if (!user) {
+          throw new Error('User not found');
+        }
+        
+        return user;
+      }
     
       // Helpers
     

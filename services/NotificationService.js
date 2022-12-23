@@ -19,7 +19,7 @@ static async sendMail(params){
           >
             <h2>Hi, ${params.name}. Welcome to ENUQA.</h2>
             <h4>You are officially In</h4>
-            <p style="margin-bottom: 30px;">Pleas enter the sign up OTP to get started</p>
+            <p style="margin-bottom: 30px;">Please enter the sign up OTP to get started</p>
             <h1 style="font-size: 40px; letter-spacing: 2px; text-align:center;">${params.OTP}</h1>
             <p style="margin-top:50px;">If you do not request for verification please do not respond to the mail. Do not share the otp with anyone.</p>
           </div>
