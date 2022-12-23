@@ -5,7 +5,8 @@ const router = express.Router();
 const validation = require('../../middlewares/validation');
 const UserService = require('../../services/UserService');
 const generateOTP = require('../../services/otp');
-const sendNotification = require('../../services/NotificationService');;
+const sendNotification = require('../../services/NotificationService');const { updateOne } = require('../../schema/userSchema');
+;
   router.post('/signUp',
     // Here we call middlewares to validate the user inputs
     validation.validateUsername,
@@ -92,9 +93,15 @@ const sendNotification = require('../../services/NotificationService');;
 
     router.post('/verify', async (req, res)=>{
       const existingUser = await UserService.findById(req.body.userId);
+      if (existingUser == null){
+        return res.status(400).json({message: "id is not there"});
+      }
       if(existingUser.otp == req.body.otp){
-        const updatedUser = await UserService.enableUser(existingUser.id);
-        return res.status(200).json({userId: existingUser.id, status: updatedUser.enabled});
+          const updatedUser = await UserService.enableUser(existingUser.id);
+      
+          return res.status(200).json({userId: existingUser.id, status: updatedUser.enabled});
+           
+        
       }
       return res.status(400).json({message: "otp do not match"});
     });

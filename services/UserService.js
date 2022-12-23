@@ -10,7 +10,10 @@ class UserService {
         return UserModel.findOne({ email }).exec();
       }
     static async findById(id) {
-      return UserModel.findById(id);
+      
+        return UserModel.findById(id);
+      
+      
     }
 
       static async findByUsername(username) {
@@ -107,8 +110,13 @@ class UserService {
     
 
       static async enableUser(userId){
-        const user = UserModel.findOneAndUpdate({_id:userId}, {$set: {"enabled": 1}}, {new: true});
-        return user;
+    
+          const user = UserModel.findOneAndUpdate({_id:userId}, {$set: {"enabled": 1}}, {new: true});
+        
+          return user;
+        
+          
+       
       }
       // Helpers
     
