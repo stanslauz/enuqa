@@ -44,7 +44,7 @@ const sendNotification = require('../../services/NotificationService');;
           name: req.body.firstName});
   
 
-        await UserService.createUser(
+        const createdUser = await UserService.createUser(
           req.body.username,
           req.body.email,
           req.body.firstName,
@@ -54,7 +54,8 @@ const sendNotification = require('../../services/NotificationService');;
         );
      
         
-        return res.status(200).send("User created successfully, check email to validate");
+        return res.status(200).json({userId: createdUser.id, message: "user created succesfully"
+        });
       } catch (err) {
         return next(err);
       }
@@ -65,13 +66,14 @@ const sendNotification = require('../../services/NotificationService');;
     router.post('/resend',async(req, res, next)=>{
       try {
         const otpGenerated = generateOTP();
-        const existingUser = await UserService.findByEmail(req.body.email);
+        const existingUser = await UserService.findById(req.body.userId);
+        
         if(existingUser)
         {
           UserService.updateToken(existingUser.email, otpGenerated);
           
             sendNotification.sendMail({
-              to: req.body.email,
+              to: existingUser.email,
              OTP: otpGenerated,
             name: existingUser.username});
         
@@ -87,8 +89,13 @@ const sendNotification = require('../../services/NotificationService');;
     });
 
 
-    router.post('/verify', (req, res)=>{
-
+    router.post('/verify', async (req, res)=>{
+      const existingUser = await UserService.findById(req.body.userId);
+      if(existingUser.otp == req.body.otp){
+        const updatedUser = await UserService.enableUser(existingUser.id);
+        return res.status(200).json({userId: existingUser.id, status: updatedUser.enabled});
+      }
+      return res.status(400).json({message: "otp do not match"});
     });
 
 

@@ -9,13 +9,10 @@ class UserService {
         // throw new Error('Not implemented');
         return UserModel.findOne({ email }).exec();
       }
-    
-      /**
-       * Finds and returns a user by username
-       *
-       * @param {*} username
-       * @returns database result
-       */
+    static async findById(id) {
+      return UserModel.findById(id);
+    }
+
       static async findByUsername(username) {
         // throw new Error('Not implemented');
         return UserModel.findOne({ username }).exec();
@@ -104,10 +101,14 @@ class UserService {
         if (!user) {
           throw new Error('User not found');
         }
-        
         return user;
       }
     
+
+      static async enableUser(userId){
+        const user = UserModel.findOneAndUpdate({_id:userId}, {$set: {"enabled": 1}}, {new: true});
+        return user;
+      }
       // Helpers
     
       /**
