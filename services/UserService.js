@@ -18,7 +18,7 @@ class UserService {
         return UserModel.findOne({ username }).exec();
       }
   
-      static async createUser(username, email, lastName, firstName,otp, password) {
+      static async createUser(username, email, lastName, firstName, otp, phone, password) {
        
         const user = new UserModel();
         user.email = email;
@@ -26,7 +26,8 @@ class UserService {
         user.firstName = firstName;
         user.password = password;
         user.username = username;
-        user.otp= otp;
+        user.otp = otp;
+        user.phone = phone;
         const savedUser = await user.save();
         return savedUser;
       }

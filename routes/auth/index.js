@@ -50,6 +50,7 @@ const sendNotification = require('../../services/NotificationService');;
           req.body.firstName,
           req.body.lastName,
           otpGenerated,
+          req.body.phone,
           req.body.password
         );
      
@@ -77,7 +78,7 @@ const sendNotification = require('../../services/NotificationService');;
              OTP: otpGenerated,
             name: existingUser.username});
         
-         
+            sendNotification.sendSms({OTP: otpGenerated, phone: existingUser.phone});
           
           return res.status(200).send({messege: "otp send successfully"});
         }

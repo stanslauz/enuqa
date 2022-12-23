@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-
+const axios = require('axios');
 const { MAIL_SETTINGS } = require('../constants/constants');
 const transporter = nodemailer.createTransport(MAIL_SETTINGS);
 
@@ -31,6 +31,24 @@ static async sendMail(params){
         return false;
       }
 
+
+}
+
+
+
+static async sendSms(params){
+
+      axios.post('http://41.215.130.247:5303/ufs-communication-service/communication/bonga/send-sms', {
+        "sendTo":params.phone,
+        "message":params.OTP
+      })
+      .then(function (response) {
+        // console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+   
 }
 }
 
